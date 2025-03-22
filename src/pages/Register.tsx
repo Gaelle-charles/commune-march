@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Store, User, Eye, EyeOff, Check } from 'lucide-react';
+import { Building2, Store, Eye, EyeOff, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,7 +9,7 @@ import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-type UserType = 'mairie' | 'commercant' | 'visiteur';
+type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
 
 const Register = () => {
@@ -47,7 +46,7 @@ const Register = () => {
     <div className="space-y-6 animate-fadeIn">
       <h3 className="text-xl font-display font-medium text-center">Choisissez votre profil</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           type="button"
           className={cn(
@@ -89,28 +88,6 @@ const Register = () => {
           <h4 className="font-medium">Commerçant</h4>
           <p className="text-sm text-muted-foreground mt-2 text-center">
             Gérez vos produits et emplacements
-          </p>
-        </button>
-        
-        <button
-          type="button"
-          className={cn(
-            "flex flex-col items-center p-6 rounded-xl transition-all",
-            userType === 'visiteur' 
-              ? "bg-accent border-2 border-primary shadow-lg" 
-              : "bg-white border border-muted hover:border-primary/50"
-          )}
-          onClick={() => setUserType('visiteur')}
-        >
-          <div className={cn(
-            "w-16 h-16 rounded-full flex items-center justify-center mb-4",
-            userType === 'visiteur' ? "bg-primary text-white" : "bg-muted text-muted-foreground"
-          )}>
-            <User size={32} />
-          </div>
-          <h4 className="font-medium">Visiteur</h4>
-          <p className="text-sm text-muted-foreground mt-2 text-center">
-            Découvrez les marchés près de chez vous
           </p>
         </button>
       </div>
