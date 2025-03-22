@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Store, User, Eye, EyeOff } from 'lucide-react';
+import { Building2, Store, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-type UserType = 'mairie' | 'commercant' | 'visiteur';
+type UserType = 'mairie' | 'commercant';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -39,17 +39,13 @@ const Login = () => {
           <div className="text-center">
             <h2 className="text-3xl font-display font-semibold">Se connecter</h2>
             <p className="mt-2 text-muted-foreground">
-              Accédez à votre espace {
-                userType === 'mairie' ? 'mairie' : 
-                userType === 'commercant' ? 'commerçant' : 
-                'visiteur'
-              }
+              Accédez à votre espace {userType === 'mairie' ? 'mairie' : 'commerçant'}
             </p>
           </div>
           
           <div className="bg-white shadow-md rounded-2xl p-8 space-y-6 animate-fadeIn">
-            {/* User type selector */}
-            <div className="grid grid-cols-3 gap-2 p-1 bg-muted rounded-lg">
+            {/* User type selector - removed visitor option */}
+            <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg">
               <button
                 type="button"
                 className={cn(
@@ -76,20 +72,6 @@ const Login = () => {
               >
                 <Store size={16} />
                 <span>Commerçant</span>
-              </button>
-              
-              <button
-                type="button"
-                className={cn(
-                  "flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm transition-colors",
-                  userType === 'visiteur' 
-                    ? "bg-white shadow-sm text-primary" 
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-                onClick={() => setUserType('visiteur')}
-              >
-                <User size={16} />
-                <span>Visiteur</span>
               </button>
             </div>
             
