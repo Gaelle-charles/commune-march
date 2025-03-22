@@ -14,6 +14,8 @@ import Events from "./pages/Events";
 import About from "./pages/About";
 import MairieAccount from "./pages/MairieAccount";
 import CommercantAccount from "./pages/CommercantAccount";
+import CommuneDetails from "./pages/CommuneDetails";
+import VisitorPresentation from "./pages/VisitorPresentation";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/account/mairie" element={<MairieAccount />} />
           <Route path="/account/commercant" element={<CommercantAccount />} />
+          <Route path="/commune/:communeName" element={<CommuneDetails />} />
+          <Route path="/visitor" element={<VisitorPresentation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

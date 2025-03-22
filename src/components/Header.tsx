@@ -61,8 +61,8 @@ const Header = () => {
             <Link to="/about" className="text-foreground/80 hover:text-primary transition-colors">
               À propos
             </Link>
-            <Link to="/features" className="text-foreground/80 hover:text-primary transition-colors">
-              Fonctionnalités
+            <Link to="/events" className="text-foreground/80 hover:text-primary transition-colors">
+              Événements
             </Link>
             <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
               Tarifs
@@ -119,11 +119,11 @@ const Header = () => {
               À propos
             </Link>
             <Link
-              to="/features"
+              to="/events"
               className="text-xl font-display hover:text-primary py-2"
               onClick={handleLinkClick}
             >
-              Fonctionnalités
+              Événements
             </Link>
             <Link
               to="/pricing"

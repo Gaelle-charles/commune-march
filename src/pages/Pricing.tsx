@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { CheckIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -110,7 +110,7 @@ const Pricing = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 py-16 bg-background">
+      <main className="flex-1 py-24 bg-background">
         <div className="container px-4 md:px-6">
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-12">
             <h1 className="text-4xl md:text-5xl font-display font-semibold">
