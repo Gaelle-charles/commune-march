@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Twitter, Facebook, Linkedin, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Linkedin, Search, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -111,16 +110,22 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-medium text-lg mb-4">Support</h3>
+            <h3 className="font-medium text-lg mb-4">Pour les visiteurs</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact
+                <Link to="/visitor" className="text-muted-foreground hover:text-primary transition-colors">
+                  Espace visiteur
                 </Link>
               </li>
               <li>
-                <Link to="/documentation" className="text-muted-foreground hover:text-primary transition-colors">
-                  Documentation
+                <Link to="/events" className="text-muted-foreground hover:text-primary transition-colors flex items-center">
+                  <Calendar className="mr-1 h-4 w-4" />
+                  <span>Événements</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                  Contact
                 </Link>
               </li>
               <li>
