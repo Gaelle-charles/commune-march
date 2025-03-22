@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, Store, Eye, EyeOff, Check } from 'lucide-react';
@@ -107,29 +108,21 @@ const Register = () => {
           userType === 'commercant' ? "bg-primary/20 text-primary" : 
           "bg-primary/20 text-primary"
         )}>
-          {userType === 'mairie' ? <Building2 size={24} /> : 
-           userType === 'commercant' ? <Store size={24} /> : 
-           <User size={24} />}
+          {userType === 'mairie' ? <Building2 size={24} /> : <Store size={24} />}
         </div>
         <h3 className="text-xl font-display font-medium ml-3">
-          Inscription - {userType === 'mairie' ? 'Mairie' : 
-                         userType === 'commercant' ? 'Commerçant' : 
-                         'Visiteur'}
+          Inscription - {userType === 'mairie' ? 'Mairie' : 'Commerçant'}
         </h3>
       </div>
       
       <div className="space-y-4">
         <div className="space-y-1">
           <Label htmlFor="name">
-            {userType === 'mairie' ? 'Nom de la commune' : 
-             userType === 'commercant' ? 'Nom de l\'entreprise' : 
-             'Nom complet'}
+            {userType === 'mairie' ? 'Nom de la commune' : 'Nom de l\'entreprise'}
           </Label>
           <Input
             id="name"
-            placeholder={userType === 'mairie' ? 'Commune de...' : 
-                          userType === 'commercant' ? 'Nom de votre commerce' : 
-                          'Prénom et nom'}
+            placeholder={userType === 'mairie' ? 'Commune de...' : 'Nom de votre commerce'}
             value={formData.name}
             onChange={(e) => updateFormData('name', e.target.value)}
             required
@@ -245,9 +238,7 @@ const Register = () => {
         {
           userType === 'mairie'
             ? 'Votre compte mairie a été créé avec succès. Vous pouvez maintenant vous connecter pour commencer à gérer vos marchés.'
-            : userType === 'commercant'
-            ? 'Votre compte commerçant a été créé avec succès. Vous pouvez maintenant vous connecter pour gérer vos produits et emplacements.'
-            : 'Votre compte visiteur a été créé avec succès. Vous pouvez maintenant vous connecter pour découvrir les marchés près de chez vous.'
+            : 'Votre compte commerçant a été créé avec succès. Vous pouvez maintenant vous connecter pour gérer vos produits et emplacements.'
         }
       </p>
       
