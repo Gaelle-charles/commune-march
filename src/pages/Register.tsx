@@ -29,13 +29,13 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   // Redirection automatique après 5 secondes sur la page de confirmation
   useEffect(() => {
     if (currentStep === 'confirmation') {
       const timer = setTimeout(() => {
-        navigate('/commercantAccount');
+        navigate(userType === 'commercant' ? '/commercantAccount' : '/mairieAccount');
       }, 5000);
       return () => clearTimeout(timer);
     }
