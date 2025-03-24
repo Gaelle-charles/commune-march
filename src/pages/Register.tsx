@@ -9,6 +9,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { supabase } from '@/lib/supabaseClient'; // Import du client Supabase
+
 
 type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
