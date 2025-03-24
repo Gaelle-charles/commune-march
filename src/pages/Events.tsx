@@ -81,9 +81,9 @@ const eventsData = [
 
 const Events = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedCommune, setSelectedCommune] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
   
   // List of unique communes for the filter
   const communes = [...new Set(eventsData.map(event => event.commune))].sort();
@@ -97,18 +97,18 @@ const Events = () => {
                           event.commune.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           event.description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCommune = selectedCommune === '' || event.commune === selectedCommune;
-    const matchesType = selectedType === '' || event.type === selectedType;
-    const matchesStatus = selectedStatus === '' || event.status === selectedStatus;
+    const matchesCommune = selectedCommune === 'all' || event.commune === selectedCommune;
+    const matchesType = selectedType === 'all' || event.type === selectedType;
+    const matchesStatus = selectedStatus === 'all' || event.status === selectedStatus;
     
     return matchesSearch && matchesCommune && matchesType && matchesStatus;
   });
   
   const clearFilters = () => {
     setSearchTerm('');
-    setSelectedCommune('');
-    setSelectedType('');
-    setSelectedStatus('');
+    setSelectedCommune('all');
+    setSelectedType('all');
+    setSelectedStatus('all');
   };
   
   return (
@@ -149,7 +149,7 @@ const Events = () => {
                         <SelectValue placeholder="Commune" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Toutes les communes</SelectItem>
+                        <SelectItem value="all">Toutes les communes</SelectItem>
                         {communes.map(commune => (
                           <SelectItem key={commune} value={commune}>{commune}</SelectItem>
                         ))}
@@ -163,7 +163,7 @@ const Events = () => {
                         <SelectValue placeholder="Type d'événement" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les types</SelectItem>
+                        <SelectItem value="all">Tous les types</SelectItem>
                         {eventTypes.map(type => (
                           <SelectItem key={type} value={type}>{type}</SelectItem>
                         ))}
@@ -177,7 +177,7 @@ const Events = () => {
                         <SelectValue placeholder="Statut" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les événements</SelectItem>
+                        <SelectItem value="all">Tous les événements</SelectItem>
                         <SelectItem value="active">En cours</SelectItem>
                         <SelectItem value="upcoming">À venir</SelectItem>
                         <SelectItem value="past">Passés</SelectItem>
@@ -186,7 +186,7 @@ const Events = () => {
                   </div>
                   
                   <div className="lg:col-span-5 flex justify-end">
-                    {(searchTerm || selectedCommune || selectedType || selectedStatus) && (
+                    {(searchTerm || selectedCommune !== 'all' || selectedType !== 'all' || selectedStatus !== 'all') && (
                       <Button variant="outline" onClick={clearFilters} className="flex items-center">
                         <Filter className="mr-2 h-4 w-4" />
                         Effacer les filtres
