@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Building2, Store, Eye, EyeOff, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabaseClient'; // Assurez-vous que le chemin est correct
+import { supabase } from '@/lib/supabaseClient'; // Correct import path
 
 type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
@@ -27,8 +27,9 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    // Redirection automatique après 5 secondes sur la page de confirmation
+  // Redirection automatique après 5 secondes sur la page de confirmation
   useEffect(() => {
     if (currentStep === 'confirmation') {
       const timer = setTimeout(() => {
@@ -42,7 +43,7 @@ const Register = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
- const handleNext = async () => {
+  const handleNext = async () => {
     if (currentStep === 'type') {
       setCurrentStep('info');
     } else if (currentStep === 'info') {
@@ -95,7 +96,7 @@ const Register = () => {
         // 3. Passage à l'étape de confirmation
         setCurrentStep('confirmation');
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('Erreur d\'inscription:', error);
         setError(error.message || 'Une erreur est survenue lors de l\'inscription.');
       } finally {
