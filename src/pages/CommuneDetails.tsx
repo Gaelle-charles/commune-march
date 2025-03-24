@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calendar, MapPin, ShoppingBag, Users } from 'lucide-react';
+import { Calendar, MapPin, ShoppingBag, Users, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -80,7 +81,7 @@ const CommuneDetails = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 py-24 bg-background">
+      <main className="flex-1 page-content bg-background">
         <div className="container px-4 md:px-6">
           {/* Commune header */}
           <div className="relative rounded-xl overflow-hidden h-64 mb-8">
@@ -106,6 +107,28 @@ const CommuneDetails = () => {
             <p className="text-muted-foreground text-lg">
               {commune.description}
             </p>
+          </div>
+          
+          {/* Visitor CTA Section */}
+          <div className="bg-primary/5 rounded-xl p-6 mb-10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <h2 className="text-2xl font-display font-semibold mb-2">
+                  Visiteur de {commune.commune} ?
+                </h2>
+                <p className="text-muted-foreground">
+                  Recevez des notifications pour les événements et offres spéciales des marchés de cette commune
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <Button asChild size="lg">
+                  <Link to="/register">S'inscrire</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/login">Se connecter</Link>
+                </Button>
+              </div>
+            </div>
           </div>
           
           {/* Tabs */}
@@ -180,6 +203,28 @@ const CommuneDetails = () => {
               </div>
             </TabsContent>
           </Tabs>
+          
+          {/* Related communes suggestions */}
+          <div className="mt-16 mb-8">
+            <h2 className="text-2xl font-display font-semibold mb-6">Autres communes à découvrir</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {['Arles', 'Avignon', 'Cassis'].map(commune => (
+                <Card key={commune} className="hover-card">
+                  <CardContent className="p-6 flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-medium">{commune}</h3>
+                      <p className="text-sm text-muted-foreground">Découvrir ses marchés</p>
+                    </div>
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link to={`/commune/${commune}`}>
+                        <ArrowRight className="h-5 w-5" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
       

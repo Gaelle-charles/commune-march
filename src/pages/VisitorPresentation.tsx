@@ -29,7 +29,7 @@ const VisitorPresentation = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 pt-24 bg-background">
+      <main className="flex-1 page-content bg-background">
         {/* Hero section */}
         <section className="py-12 md:py-24 bg-accent/10">
           <div className="container px-4 md:px-6">
@@ -44,7 +44,7 @@ const VisitorPresentation = () => {
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link to="/visitor/login">
+                    <Link to="/register">
                       Espace Visiteur
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
@@ -84,10 +84,12 @@ const VisitorPresentation = () => {
               {topCommunes.map(commune => (
                 <Card key={commune} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4 text-center">
-                    <div className="flex justify-center mb-2">
-                      <MapPin className="h-5 w-5 text-primary" />
-                    </div>
-                    <h3 className="font-medium">{commune}</h3>
+                    <Link to={`/commune/${commune}`} className="block">
+                      <div className="flex justify-center mb-2">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
+                      <h3 className="font-medium">{commune}</h3>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}
@@ -146,10 +148,10 @@ const VisitorPresentation = () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button size="lg" asChild>
-                  <Link to="/visitor/login">Se connecter</Link>
+                  <Link to="/register">S'inscrire</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link to="/visitor/register">S'inscrire</Link>
+                  <Link to="/login">Se connecter</Link>
                 </Button>
               </div>
             </div>
