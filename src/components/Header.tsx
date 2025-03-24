@@ -67,6 +67,9 @@ const Header = () => {
             <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
               Tarifs
             </Link>
+            <Link to="/blog" className="text-foreground/80 hover:text-primary transition-colors">
+              Blog
+            </Link>
             <Link to="/contact" className="text-foreground/80 hover:text-primary transition-colors">
               Contact
             </Link>
@@ -131,6 +134,13 @@ const Header = () => {
               onClick={handleLinkClick}
             >
               Tarifs
+            </Link>
+            <Link
+              to="/blog"
+              className="text-xl font-display hover:text-primary py-2"
+              onClick={handleLinkClick}
+            >
+              Blog
             </Link>
             <Link
               to="/contact"

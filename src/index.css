@@ -117,6 +117,16 @@
   .glass-card {
     @apply glass rounded-2xl shadow-lg;
   }
+
+  /* Add space below header for all pages except home */
+  .page-content {
+    @apply pt-20; /* Add padding for the fixed header */
+  }
+
+  /* Home page specific style to override the padding */
+  .home-page {
+    @apply pt-0;
+  }
 }
 
 /* Assurez-vous que les textes apparaissent clairement sur les images */
