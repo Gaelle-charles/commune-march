@@ -9,13 +9,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabaseClient'; // Correct import path
+import { supabase } from '@/lib/supabaseClient';
+import { useToast } from '@/hooks/use-toast';
 
 type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
 
 const Register = () => {
-  const navigate = useNavigate(); // Hook pour la navigation
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [userType, setUserType] = useState<UserType>('mairie');
   const [currentStep, setCurrentStep] = useState<RegisterStep>('type');
   const [formData, setFormData] = useState({
@@ -50,11 +52,21 @@ const Register = () => {
       // Vérifications
       if (formData.password !== formData.confirmPassword) {
         setError('Les mots de passe ne correspondent pas.');
+        toast({
+          title: "Erreur",
+          description: 'Les mots de passe ne correspondent pas.',
+          variant: "destructive"
+        });
         return;
       }
 
       if (!formData.termsAccepted) {
         setError('Vous devez accepter les conditions d\'utilisation.');
+        toast({
+          title: "Erreur",
+          description: 'Vous devez accepter les conditions d\'utilisation.',
+          variant: "destructive"
+        });
         return;
       }
 
@@ -99,6 +111,11 @@ const Register = () => {
       } catch (error: any) {
         console.error('Erreur d\'inscription:', error);
         setError(error.message || 'Une erreur est survenue lors de l\'inscription.');
+        toast({
+          title: "Erreur d'inscription",
+          description: error.message || 'Une erreur est survenue lors de l\'inscription.',
+          variant: "destructive"
+        });
       } finally {
         setIsLoading(false);
       }
