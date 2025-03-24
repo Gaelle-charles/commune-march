@@ -1,6 +1,5 @@
-
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Building2, Store, Eye, EyeOff, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,13 +8,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabaseClient'; // Import du client Supabase
-
+import { supabase } from '@/lib/supabaseClient';
 
 type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [userType, setUserType] = useState<UserType>('mairie');
   const [currentStep, setCurrentStep] = useState<RegisterStep>('type');
   const [formData, setFormData] = useState({
@@ -27,66 +26,77 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Redirection automatique après inscription réussie
+  useEffect(() => {
+    if (currentStep === 'confirmation') {
+      const timer = setTimeout(() => {
+        navigate(userType === 'commercant' ? '/commercantAccount' : '/mairieAccount');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, navigate, userType]);
 
   const updateFormData = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-
-const handleNext = async () => {
-  if (currentStep === 'type') {
-    setCurrentStep('info');
-  } else if (currentStep === 'info') {
-    // Vérifier que les mots de passe correspondent
-    if (formData.password !== formData.confirmPassword) {
-      alert('Les mots de passe ne correspondent pas.');
-      return;
-    }
-
-    // Vérifier que les conditions sont acceptées
-    if (!formData.termsAccepted) {
-      alert('Vous devez accepter les conditions d\'utilisation.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Appel à l'API Supabase pour l'inscription
-      const { user, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (error) {
-        throw error;
+  const handleNext = async () => {
+    if (currentStep === 'type') {
+      setCurrentStep('info');
+    } else if (currentStep === 'info') {
+      // Validation des champs
+      if (formData.password !== formData.confirmPassword) {
+        setError('Les mots de passe ne correspondent pas.');
+        return;
       }
-      // Ajouter des informations supplémentaires dans la table `profiles`
-      const { data, error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: user.id, // L'ID de l'utilisateur créé
+
+      if (!formData.termsAccepted) {
+        setError('Vous devez accepter les conditions d\'utilisation.');
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Inscription avec Supabase
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              user_type: userType
+            }
+          }
+        });
+
+        if (authError) throw authError;
+
+        // Ajout dans la table profiles
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: authData.user?.id,
             name: formData.name,
-            user_type: userType, // 'mairie' ou 'commercant'
+            user_type: userType,
             email: formData.email,
-          },
-        ]);
+            updated_at: new Date().toISOString()
+          });
 
-      if (profileError) {
-        throw profileError;
+        if (profileError) throw profileError;
+
+        setCurrentStep('confirmation');
+      } catch (error: any) {
+        console.error('Erreur d\'inscription:', error);
+        setError(error.message || 'Une erreur est survenue lors de l\'inscription.');
+      } finally {
+        setIsLoading(false);
       }
-      
-      // Si l'inscription réussit, passez à l'étape de confirmation
-      setCurrentStep('confirmation');
-    } catch (error) {
-      console.error('Erreur lors de l\'inscription :', error.message);
-      alert('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
-    } finally {
-      setIsLoading(false);
     }
-  }
-};
+  };
 
   const renderUserTypeStep = () => (
     <div className="space-y-6 animate-fadeIn">
@@ -159,6 +169,12 @@ const handleNext = async () => {
           Inscription - {userType === 'mairie' ? 'Mairie' : 'Commerçant'}
         </h3>
       </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
+          {error}
+        </div>
+      )}
       
       <div className="space-y-4">
         <div className="space-y-1">
@@ -280,15 +296,15 @@ const handleNext = async () => {
       <h3 className="text-2xl font-display font-medium">Inscription réussie !</h3>
       
       <p className="text-muted-foreground">
-        {
-          userType === 'mairie'
-            ? 'Votre compte mairie a été créé avec succès. Vous pouvez maintenant vous connecter pour commencer à gérer vos marchés.'
-            : 'Votre compte commerçant a été créé avec succès. Vous pouvez maintenant vous connecter pour gérer vos produits et emplacements.'
-        }
+        {userType === 'mairie'
+          ? 'Votre compte mairie a été créé avec succès. Vous serez redirigé vers votre espace dans quelques secondes.'
+          : 'Votre compte commerçant a été créé avec succès. Vous serez redirigé vers votre espace dans quelques secondes.'}
       </p>
       
       <Button asChild className="w-full">
-        <Link to="/login">Se connecter</Link>
+        <Link to={userType === 'commercant' ? '/commercantAccount' : '/mairieAccount'}>
+          Accéder à mon compte maintenant
+        </Link>
       </Button>
     </div>
   );
