@@ -30,18 +30,61 @@ const Register = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleNext = () => {
-    if (currentStep === 'type') {
-      setCurrentStep('info');
-    } else if (currentStep === 'info') {
-      // Simuler l'envoi du formulaire
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        setCurrentStep('confirmation');
-      }, 1500);
+
+const handleNext = async () => {
+  if (currentStep === 'type') {
+    setCurrentStep('info');
+  } else if (currentStep === 'info') {
+    // Vérifier que les mots de passe correspondent
+    if (formData.password !== formData.confirmPassword) {
+      alert('Les mots de passe ne correspondent pas.');
+      return;
     }
-  };
+
+    // Vérifier que les conditions sont acceptées
+    if (!formData.termsAccepted) {
+      alert('Vous devez accepter les conditions d\'utilisation.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Appel à l'API Supabase pour l'inscription
+      const { user, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) {
+        throw error;
+      }
+      // Ajouter des informations supplémentaires dans la table `profiles`
+      const { data, error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: user.id, // L'ID de l'utilisateur créé
+            name: formData.name,
+            user_type: userType, // 'mairie' ou 'commercant'
+            email: formData.email,
+          },
+        ]);
+
+      if (profileError) {
+        throw profileError;
+      }
+      
+      // Si l'inscription réussit, passez à l'étape de confirmation
+      setCurrentStep('confirmation');
+    } catch (error) {
+      console.error('Erreur lors de l\'inscription :', error.message);
+      alert('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+};
 
   const renderUserTypeStep = () => (
     <div className="space-y-6 animate-fadeIn">
