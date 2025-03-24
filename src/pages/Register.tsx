@@ -15,6 +15,7 @@ type UserType = 'mairie' | 'commercant';
 type RegisterStep = 'type' | 'info' | 'confirmation';
 
 const Register = () => {
+  const navigate = useNavigate(); // Hook pour la navigation
   const [userType, setUserType] = useState<UserType>('mairie');
   const [currentStep, setCurrentStep] = useState<RegisterStep>('type');
   const [formData, setFormData] = useState({
@@ -27,20 +28,79 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+    // Redirection automatique après 5 secondes sur la page de confirmation
+  useEffect(() => {
+    if (currentStep === 'confirmation') {
+      const timer = setTimeout(() => {
+        navigate('/commercantAccount');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, navigate]);
+
   const updateFormData = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleNext = () => {
+ const handleNext = async () => {
     if (currentStep === 'type') {
       setCurrentStep('info');
     } else if (currentStep === 'info') {
-      // Simuler l'envoi du formulaire
+      // Vérifications
+      if (formData.password !== formData.confirmPassword) {
+        setError('Les mots de passe ne correspondent pas.');
+        return;
+      }
+
+      if (!formData.termsAccepted) {
+        setError('Vous devez accepter les conditions d\'utilisation.');
+        return;
+      }
+
       setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
+      setError('');
+
+      try {
+        // 1. Inscription avec Supabase
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              name: formData.name,
+              user_type: userType
+            }
+          }
+        });
+
+        if (authError) {
+          throw authError;
+        }
+
+        // 2. Ajout dans la table profiles (optionnel si vous utilisez déjà le champ options.data)
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: authData.user?.id,
+            name: formData.name,
+            user_type: userType,
+            email: formData.email,
+            updated_at: new Date().toISOString()
+          });
+
+        if (profileError) {
+          throw profileError;
+        }
+
+        // 3. Passage à l'étape de confirmation
         setCurrentStep('confirmation');
-      }, 1500);
+
+      } catch (error) {
+        console.error('Erreur d\'inscription:', error);
+        setError(error.message || 'Une erreur est survenue lors de l\'inscription.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
