@@ -169,7 +169,7 @@ const Footer = () => {
             {displayedCommunes.map((commune) => (
               <Link
                 key={commune}
-                to={`/communes/${commune.toLowerCase().replace(/ /g, '-')}`}
+                to={`/communeDetails/${commune.toLowerCase().replace(/ /g, '-')}`}
                 className="text-muted-foreground hover:text-primary hover:underline text-sm py-1"
               >
                 {commune}
